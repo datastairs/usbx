@@ -1,0 +1,64 @@
+; USBX Virtual USB Device — INF installation file
+;
+; Install:  pnputil /add-driver usbx.inf /install
+; Or right-click usbx.inf → Install
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = USBDevice
+ClassGuid   = {88BAE032-5A81-49F0-BC3D-A4FF138216D6}
+Provider    = %Manufacturer%
+CatalogFile = usbx.cat
+DriverVer   = 01/01/2026,1.0.0.0
+PnpLockdown = 1
+
+[SourceDisksNames]
+1 = %DiskName%
+
+[SourceDisksFiles]
+usbx.dll = 1
+WdfCoInstaller01011.dll = 1
+
+[DestinationDirs]
+DefaultDestDir  = 13
+CopyDriver      = 12
+
+[Manufacturer]
+%Manufacturer% = USBX,NTamd64
+
+[USBX.NTamd64]
+%DeviceName% = USBX_Install, USB\VID_5553&PID_4258
+
+[USBX_Install.NT]
+CopyFiles = CopyDriver
+
+[USBX_Install.NT.Services]
+AddService = usbx, 2, USBX_Service
+
+[USBX_Service]
+ServiceType    = 2               ; SERVICE_FILE_SYSTEM_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %13%\usbx.dll   ; %13% = driver directory
+
+[USBX_Install.NT.Wdf]
+KmdfService      = usbx, usbx_wdfsect
+UmdfService      = usbx, usbx_umdfsect
+UmdfServiceOrder = usbx
+
+[usbx_wdfsect]
+KmdfLibraryVersion = 1.11
+
+[usbx_umdfsect]
+UmdfLibraryVersion   = 2.0
+ServiceBinary        = %13%\usbx.dll
+DriverCLSID          = {12345678-1234-1234-1234-123456789ABC}
+
+[CopyDriver]
+usbx.dll
+WdfCoInstaller01011.dll
+
+[Strings]
+Manufacturer = "USBX Project"
+DeviceName   = "USBX Virtual USB Device"
+DiskName     = "USBX Driver Disk"
