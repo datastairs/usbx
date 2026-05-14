@@ -26,6 +26,12 @@ type USBTransportConfig struct {
 	Timeout time.Duration
 }
 
+// GadgetConfig holds the Linux FunctionFS gadget transport configuration.
+type GadgetConfig struct {
+	// GadgetDir is the FunctionFS mount point. Default: /dev/usb-ffs/usbx.
+	GadgetDir string
+}
+
 // Transport is the abstract interface for USB-simulated communication.
 // Implementations include TCP (for dev/test) and raw USB endpoints via gousb.
 type Transport interface {
